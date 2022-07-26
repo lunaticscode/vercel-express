@@ -1,8 +1,10 @@
 const express = require("express");
+const cors = require("cors");
 const { _makeUserData } = require("./makeData");
 const app = express();
 const PORT = 8888;
 
+app.use(cors());
 app.use(express.json());
 
 app.get("/user", (req, res) => {
@@ -12,7 +14,6 @@ app.get("/user", (req, res) => {
 app.post("/user", (req, res) => {
   const cnt = req.body.count || 0;
   let resultData;
-
   if (!cnt) {
     resultData = [];
     return res.status(200).json({ result: resultData });
