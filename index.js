@@ -15,3 +15,5 @@ app.post("/test", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Express running on ${PORT}`);
 });
+
+module.exports = app;
