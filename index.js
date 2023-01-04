@@ -1,5 +1,6 @@
 const express = require("express");
 const fetch = require("node-fetch");
+const FormData = require("form-data");
 const cors = require("cors");
 const { _makeUserData } = require("./makeData");
 const app = express();
@@ -28,10 +29,19 @@ app.post("/user", (req, res) => {
 
 app.post("/elice-gmail", async (req, res) => {
   const { gmailUrl, ...emailContent } = req.body;
+  const { email, name, message = "없음", phone = "없음" } = emailContent;
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("name", name);
+  formData.append("message", message);
+  formData.append("phone", phone);
+
+  // console.log(emailContent);
+  // console.log({ gmailUrl });
   const result = await fetch(gmailUrl, {
     method: "post",
-    body: JSON.stringify(emailContent),
-    headers: { "Content-Type": "application/json" },
+    body: formData,
+    // headers: { "Content-Type": "multipart/form-data" },
   })
     .then((res) => res.json())
     .catch((err) => {
