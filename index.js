@@ -2,7 +2,7 @@ const express = require("express");
 const fetch = require("node-fetch");
 const FormData = require("form-data");
 const cors = require("cors");
-const { _makeUserData } = require("./makeData");
+const { _makeUserData, _apiDataList } = require("./makeData");
 const app = express();
 const PORT = 8888;
 
@@ -25,6 +25,24 @@ app.post("/user", (req, res) => {
     return _makeUserData();
   });
   return res.status(200).json({ result: resultData });
+});
+
+app.get("/api", (req, res) => {
+  const { pageNumber, pageSize = 10 } = req.query;
+  console.log({ pageNumber, pageSize });
+
+  const content = _apiDataList.slice(
+    (pageNumber - 1) * pageSize,
+    pageNumber * pageSize
+  );
+  const isLast =
+    content.length < pageSize || content.length === _apiDataList.length;
+  return res.json({
+    allCnt: _apiDataList.length,
+    contentCnt: content.length,
+    content,
+    isLast,
+  });
 });
 
 app.post("/elice-gmail", async (req, res) => {
