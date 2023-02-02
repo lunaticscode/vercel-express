@@ -45,6 +45,7 @@ const paginating = (pageNumber, pageSize, type) => {
   const isLast =
     content.length < pageSize || content.length === _dataList.length;
   return {
+    pageNumber,
     allCnt: _dataList.length,
     contentCnt: content.length,
     content,
