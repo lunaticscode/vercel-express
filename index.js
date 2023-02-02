@@ -2,7 +2,12 @@ const express = require("express");
 const fetch = require("node-fetch");
 const FormData = require("form-data");
 const cors = require("cors");
-const { _makeUserData, _apiDataList, _licenseDataList } = require("./makeData");
+const {
+  _makeUserData,
+  _apiDataList,
+  _licenseDataList,
+  _prodDataList,
+} = require("./makeData");
 const app = express();
 const PORT = 8888;
 
@@ -20,7 +25,6 @@ app.post("/user", (req, res) => {
     resultData = [];
     return res.status(200).json({ result: resultData });
   }
-
   resultData = new Array(cnt).fill(0).map((elem) => {
     return _makeUserData();
   });
@@ -31,6 +35,7 @@ const paginating = (pageNumber, pageSize, type) => {
   const mapTypeToDataList = {
     api: _apiDataList,
     license: _licenseDataList,
+    prod: _prodDataList,
   };
   const _dataList = mapTypeToDataList[type];
   const content = _dataList.slice(
@@ -54,8 +59,18 @@ app.get("/api", (req, res) => {
 
 app.get("/license", (req, res) => {
   const { pageNumber, pageSize = 10 } = req.query;
-
   return res.json(paginating(pageNumber, pageSize, "license"));
+});
+
+app.get("/prod/:id", (req, res) => {
+  const { id } = req.params;
+  const prodData = _prodDataList.find((prod) => prod.prodId === id);
+  return res.json(prodData);
+});
+
+app.get("/prod", (req, res) => {
+  const { pageNumber, pageSize = 10 } = req.body;
+  return res.json(paginating(pageNumber, pageSize, "prod"));
 });
 
 app.post("/elice-gmail", async (req, res) => {

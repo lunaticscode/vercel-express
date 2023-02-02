@@ -14,6 +14,23 @@ const _makeUserData = () => {
   };
 };
 
+const _makeProdData = () => {
+  const prodId = faker.datatype.uuid();
+  const prodName = faker.name.firstName();
+  const prodImageUrl = faker.image.fashion();
+  const createdAt = faker.date.past();
+  const updatedAt = new Date(
+    createdAt.getTime() + 1000 * 3600 * 24 * Math.floor(Math.random() * 10 + 20)
+  );
+  return {
+    prodId,
+    prodName,
+    prodImageUrl,
+    createdAt,
+    updatedAt,
+  };
+};
+
 const _makeLicenseData = (idx) => {
   const regTimestamp = faker.date.past();
   const expiredTimestamp = new Date(
@@ -66,11 +83,15 @@ const _apiDataList = Array.from({ length: 147 }, () => _makeApiData()).sort(
   (a, b) =>
     new Date(b.regTimestamp).getTime() - new Date(a.regTimestamp).getTime()
 );
-// console.log(_apiDataList);
+
+const _prodDataList = Array.from({ length: 163 }, () => _makeProdData()).sort(
+  (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+);
 
 module.exports = {
   _makeUserData,
   _makeApiData,
   _apiDataList,
   _licenseDataList,
+  _prodDataList,
 };
