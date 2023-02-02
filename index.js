@@ -69,7 +69,7 @@ app.get("/prod/:id", (req, res) => {
 });
 
 app.get("/prod", (req, res) => {
-  const { pageNumber, pageSize = 10 } = req.body;
+  const { pageNumber, pageSize = 10 } = req.query;
   return res.json(paginating(pageNumber, pageSize, "prod"));
 });
 
