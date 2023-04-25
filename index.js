@@ -53,6 +53,34 @@ const paginating = (pageNumber, pageSize, type) => {
   };
 };
 
+//* _id, productName, price, quantity,image, createdAt
+
+//* select * from cart where createdAt < 2022-02-01 orderby id
+const getCreatedAtData = () => {
+  return new Date(
+    new Date().getTime() - Math.random(1000 * 3600 * 24 * 30) - 1000 * 50
+  );
+};
+
+const productNames = ["커피", "후추", "소금", "설탕", "고춧가루"];
+
+const cartData = Array.from({ length: 50 }).map((_, index) => ({
+  _id: index,
+  productName: productNames[Math.floor(Math.random() * 5)],
+  price: Math.floor(Math.random() * 50000 + 50000),
+  quantity: Math.floor(Math.random() * 20 + 1),
+  image: "https://source.unsplash.com/random/300×300",
+  createdAt: getCreatedAt(),
+}));
+
+const sleep = async () =>
+  await new Promise((resolve) => setTimeout(() => resolve(), 500));
+
+app.get("/dummy/cart", async (req, res) => {
+  await sleep();
+  return res.json({ data: cartData });
+});
+
 const policyNames = [
   "통합 에이전트 기본 정책 1",
   "통합 에이전트 기본 정책 2",
