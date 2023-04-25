@@ -76,7 +76,7 @@ app.get("/dummy/policy", (req, res) => {
   const policyData = Array.from({ length: 87 }).map((val, index) => {
     const createdAt = getCreatedAt();
     const updatedAt = new Date(
-      createdAt.getTime() -
+      createdAt.getTime() +
         Math.floor(Math.random() * 1000 * 3600 * 24 * 30 + 1000 * 3600)
     );
     return {
