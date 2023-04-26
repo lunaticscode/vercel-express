@@ -77,7 +77,8 @@ router.get("/detail/:id", (req, res) => {
   return res.json({
     data: {
       id,
-      description: policyDescs[Math.floor(Math.random() * policyDescs.length)],
+      policyName: policyNames[id],
+      description: policyDescs[id],
       createdAt,
       updatedAt,
     },
