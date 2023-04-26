@@ -13,6 +13,9 @@ const PORT = 8888;
 
 app.use(cors());
 app.use(express.json());
+
+const policyRouter = require("./routers/policy.router");
+
 const sleep = async (time = 500) =>
   await new Promise((resolve) => setTimeout(() => resolve(), time));
 
@@ -55,13 +58,13 @@ const paginating = (pageNumber, pageSize, type) => {
   };
 };
 
-app.get("/dummy/sleep-10", async (req, res) => {
-  await sleep(10000);
+app.get("/dummy/sleep-5", async (req, res) => {
+  await sleep(5000);
   return res.json({ result: true, msg: "delay 10 seconds reponse." });
 });
 
 app.get("/dummy/error", (req, res) => {
-  throw new Error();
+  throw new Error("Trigger Server-error");
 });
 
 //* _id, productName, price, quantity,image, createdAt
@@ -108,24 +111,7 @@ const getCreatedAt = () => {
   );
 };
 
-app.get("/dummy/policy", (req, res) => {
-  const policyData = Array.from({ length: 87 }).map((val, index) => {
-    const createdAt = getCreatedAt();
-    const updatedAt = new Date(
-      createdAt.getTime() +
-        Math.floor(Math.random() * 1000 * 3600 * 24 * 30 + 1000 * 3600)
-    );
-    return {
-      id: index,
-      policyName: policyNames[Math.floor(Math.random() * policyNames.length)],
-      deviceCnt: Math.floor(Math.random() * 250 + 50),
-      os: osNames[Math.floor(Math.random() * osNames.length)],
-      updatedAt,
-      createdAt,
-    };
-  });
-  return res.json({ data: policyData });
-});
+app.use("/dummy/policy", policyRouter);
 
 app.get("/api", (req, res) => {
   const { pageNumber, pageSize = 10 } = req.query;
