@@ -13,6 +13,8 @@ const PORT = 8888;
 
 app.use(cors());
 app.use(express.json());
+const sleep = async (time = 500) =>
+  await new Promise((resolve) => setTimeout(() => resolve(), time));
 
 app.get("/user", (req, res) => {
   return res.status(200).json({ result: _makeUserData() });
@@ -53,6 +55,15 @@ const paginating = (pageNumber, pageSize, type) => {
   };
 };
 
+app.get("/dummy/sleep-10", async (req, res) => {
+  await sleep(10000);
+  return res.json({ result: true, msg: "delay 10 seconds reponse." });
+});
+
+app.get("/dummy/error", (req, res) => {
+  throw new Error();
+});
+
 //* _id, productName, price, quantity,image, createdAt
 
 //* select * from cart where createdAt < 2022-02-01 orderby id
@@ -72,9 +83,6 @@ const cartData = Array.from({ length: 50 }).map((_, index) => ({
   image: "https://source.unsplash.com/random/300×300",
   createdAt: getCreatedAtData(),
 }));
-
-const sleep = async () =>
-  await new Promise((resolve) => setTimeout(() => resolve(), 500));
 
 app.get("/dummy/cart", async (req, res) => {
   await sleep();
