@@ -69,7 +69,6 @@ router.get("/:id", (req, res) => {
   "interaction 정책 3",
  */
 const policyDescs = policyNames.map((name) => `${name} - 정책 상세내용`);
-ㅊ;
 
 router.get("/detail/:id", (req, res) => {
   const id = Number(req.params.id);
