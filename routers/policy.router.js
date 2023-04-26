@@ -44,7 +44,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
   const createdAt = getCreatedAt();
   const updatedAt = getUpdatedAt(createdAt);
   return res.json({
@@ -55,6 +55,32 @@ router.get("/:id", (req, res) => {
       os: osNames[Math.floor(Math.random() * osNames.length)],
       updatedAt,
       createdAt,
+    },
+  });
+});
+
+/**
+ * "통합 에이전트 기본 정책 1",
+  "통합 에이전트 기본 정책 2",
+  "통합 에이전트 기본 정책 3",
+  "interaction 정책",
+  "interaction 정책 1",
+  "interaction 정책 2",
+  "interaction 정책 3",
+ */
+const policyDescs = policyNames.map((name) => `${name} - 정책 상세내용`);
+ㅊ;
+
+router.get("/detail/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const createdAt = getCreatedAt();
+  const updatedAt = getUpdatedAt(createdAt);
+  return res.json({
+    data: {
+      id,
+      description: policyDescs[Math.floor(Math.random() * policyDescs.length)],
+      createdAt,
+      updatedAt,
     },
   });
 });
