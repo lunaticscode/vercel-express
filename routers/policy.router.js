@@ -47,14 +47,16 @@ router.get("/:id", (req, res) => {
   const id = req.params.id;
   const createdAt = getCreatedAt();
   const updatedAt = getUpdatedAt(createdAt);
-  return {
-    id,
-    policyName: policyNames[Math.floor(Math.random() * policyNames.length)],
-    deviceCnt: Math.floor(Math.random() * 250 + 50),
-    os: osNames[Math.floor(Math.random() * osNames.length)],
-    updatedAt,
-    createdAt,
-  };
+  return res.json({
+    data: {
+      id,
+      policyName: policyNames[Math.floor(Math.random() * policyNames.length)],
+      deviceCnt: Math.floor(Math.random() * 250 + 50),
+      os: osNames[Math.floor(Math.random() * osNames.length)],
+      updatedAt,
+      createdAt,
+    },
+  });
 });
 
 module.exports = router;
