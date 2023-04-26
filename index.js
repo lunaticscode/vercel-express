@@ -70,7 +70,7 @@ const cartData = Array.from({ length: 50 }).map((_, index) => ({
   price: Math.floor(Math.random() * 50000 + 50000),
   quantity: Math.floor(Math.random() * 20 + 1),
   image: "https://source.unsplash.com/random/300×300",
-  createdAt: getCreatedAt(),
+  createdAt: getCreatedAtData(),
 }));
 
 const sleep = async () =>
@@ -170,8 +170,8 @@ app.post("/elice-gmail", async (req, res) => {
   return res.json({ isError: false, result });
 });
 
-app.listen(PORT, () => {
-  console.log(`Express running on ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Express running on ${PORT}`);
+// });
 
 module.exports = app;
