@@ -53,21 +53,13 @@ router.get("/:id", (req, res) => {
       policyName: policyNames[Math.floor(Math.random() * policyNames.length)],
       deviceCnt: Math.floor(Math.random() * 250 + 50),
       os: osNames[Math.floor(Math.random() * osNames.length)],
+      descId: 56 + id,
       updatedAt,
       createdAt,
     },
   });
 });
 
-/**
- * "통합 에이전트 기본 정책 1",
-  "통합 에이전트 기본 정책 2",
-  "통합 에이전트 기본 정책 3",
-  "interaction 정책",
-  "interaction 정책 1",
-  "interaction 정책 2",
-  "interaction 정책 3",
- */
 const policyDescs = policyNames.map((name) => `${name} - 정책 상세내용`);
 
 router.get("/detail/:id", (req, res) => {
@@ -77,8 +69,8 @@ router.get("/detail/:id", (req, res) => {
   return res.json({
     data: {
       id,
-      policyName: policyNames[id],
-      description: policyDescs[id],
+      policyName: policyNames[id - 56],
+      description: policyDescs[id - 56],
       createdAt,
       updatedAt,
     },
