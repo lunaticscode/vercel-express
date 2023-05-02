@@ -40,9 +40,34 @@ const getPolicyAllData = async () => {
   });
 };
 
+const insertPolicyData = async (data) => {
+  const createdAt = new Date();
+  const updatedAt = new Date();
+  return await new Promise((resolve, _) => {
+    connection.query(
+      "insert into policy (policyName, deviceCnt, os, updatedAt, createdAt) values (?, ?, ?, ?, ?)",
+      [data.policyName, data.deviceCnt, data.os, createdAt, updatedAt],
+      (err, results) => {
+        if (err) {
+          console.log({ err });
+          return resolve(false);
+        }
+        console.log(results);
+        return resolve(true);
+      }
+    );
+  });
+};
+
 router.get("/", async (req, res) => {
   const policyListData = await getPolicyAllData();
   return res.json({ data: policyListData });
+});
+
+router.post("/", async (req, res) => {
+  const data = req.body;
+  const result = await insertPolicyData(data);
+  return res.json({ result });
 });
 
 router.get("/:id", (req, res) => {
