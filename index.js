@@ -16,6 +16,7 @@ app.use(express.json());
 
 const policyRouter = require("./routers/policy.router");
 const userRouter = require("./routers/user.router");
+const dummyInsertRouter = require("./routers/dummyInsert.router");
 
 const sleep = async (time = 500) =>
   await new Promise((resolve) => setTimeout(() => resolve(), time));
@@ -111,7 +112,7 @@ const getCreatedAt = () => {
       Math.floor(Math.random() * 1000 * 3600 * 24 * 30 + 1000 * 3600)
   );
 };
-
+app.use("/dummy/insert", dummyInsertRouter);
 app.use("/dummy/policy", policyRouter);
 app.use("/dummy/users", userRouter);
 

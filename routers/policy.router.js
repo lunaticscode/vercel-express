@@ -1,4 +1,5 @@
 const express = require("express");
+const connection = require("../db_init");
 const router = express.Router();
 
 const policyNames = [
@@ -27,20 +28,21 @@ const getUpdatedAt = (createdAt) => {
   );
 };
 
-router.get("/", (req, res) => {
-  const policyData = Array.from({ length: 87 }).map((val, index) => {
-    const createdAt = getCreatedAt();
-    const updatedAt = getUpdatedAt(createdAt);
-    return {
-      id: index,
-      policyName: policyNames[Math.floor(Math.random() * policyNames.length)],
-      deviceCnt: Math.floor(Math.random() * 250 + 50),
-      os: osNames[Math.floor(Math.random() * osNames.length)],
-      updatedAt,
-      createdAt,
-    };
+const getPolicyAllData = async () => {
+  return await new Promise((resolve, _) => {
+    connection.query("Select * from policy", (err, results) => {
+      if (err) {
+        console.log(err);
+        return resolve(null);
+      }
+      return resolve(results);
+    });
   });
-  return res.json({ data: policyData });
+};
+
+router.get("/", async (req, res) => {
+  const policyListData = await getPolicyAllData();
+  return res.json({ data: policyListData });
 });
 
 router.get("/:id", (req, res) => {
@@ -76,5 +78,7 @@ router.get("/detail/:id", (req, res) => {
     },
   });
 });
+
+router.get("/");
 
 module.exports = router;
