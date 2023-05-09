@@ -61,7 +61,7 @@ const insertPolicyData = async (data) => {
 
 router.get("/", async (req, res) => {
   const policyListData = await getPolicyAllData();
-  return res.json({ data: policyListData });
+  return res.json(policyListData);
 });
 
 router.post("/", async (req, res) => {

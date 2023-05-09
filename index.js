@@ -94,6 +94,10 @@ app.get("/dummy/cart", async (req, res) => {
   return res.json({ data: cartData });
 });
 
+app.get("/dummy/test", async (req, res) => {
+  res.json([{ a: 1 }]);
+});
+
 const policyNames = [
   "통합 에이전트 기본 정책 1",
   "통합 에이전트 기본 정책 2",

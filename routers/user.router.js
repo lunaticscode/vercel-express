@@ -9,7 +9,7 @@ const dummyUsers = [
 ];
 
 router.get("/", (req, res) => {
-  return res.json({ data: dummyUsers });
+  return res.json(dummyUsers);
 });
 
 router.get("/:id", (req, res) => {
