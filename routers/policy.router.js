@@ -59,6 +59,18 @@ const insertPolicyData = async (data) => {
   });
 };
 
+const deletePolicyData = async (id) => {
+  return await new Promise((resolve, _) => {
+    connection.query(`delete from policy where id=${id}`, (err, results) => {
+      if (err) {
+        console.log({ err });
+        return resolve(false);
+      }
+      return resolve(true);
+    });
+  });
+};
+
 router.get("/", async (req, res) => {
   const policyListData = await getPolicyAllData();
   return res.json(policyListData);
@@ -67,7 +79,13 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const data = req.body;
   const result = await insertPolicyData(data);
-  return res.json({ result });
+  return res.json({ result, timestamp: new Date().getTime() });
+});
+
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  const result = await deletePolicyData(id);
+  return res.json({ result, timestamp: new Date().getTime() });
 });
 
 router.get("/:id", (req, res) => {
