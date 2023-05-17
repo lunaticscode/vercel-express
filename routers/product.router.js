@@ -75,7 +75,7 @@ router.get("/:id", async (req, res) => {
   const result = await getProductByIdService(id);
   if (!result)
     return res.status(500).json({ isError: true, message: "(!)Server Error." });
-  return res.json({ isError: false, data: result[0] });
+  return res.json({ isError: false, data: result[0] || null });
 });
 
 router.post("/", async (req, res) => {
