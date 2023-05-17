@@ -47,8 +47,16 @@ const insertProductService = async (data) => {
 const updateProductService = async () => {
   return await new Promise((resolve, reject) => {});
 };
-const deleteProductService = async () => {
-  return await new Promise((resolve, reject) => {});
+const deleteProductService = async (id) => {
+  return await new Promise((resolve) => {
+    connection.query(`delete from product where id = ${id}`, (err) => {
+      if (err) {
+        console.log({ err });
+        return resolve(false);
+      }
+      return resolve(true);
+    });
+  });
 };
 
 router.get("/", async (req, res) => {
@@ -63,7 +71,7 @@ router.get("/:id", async (req, res) => {
   if (!id || !id.trim() || isNaN(id))
     return res
       .status(400)
-      .json({ isError: true, message: "(!)Invalid product id." });
+      .json({ isError: true, message: `(!)Invalid product id (= ${id}).` });
   const result = await getProductByIdService(id);
   if (!result)
     return res.status(500).json({ isError: true, message: "(!)Server Error." });
@@ -77,7 +85,17 @@ router.post("/", async (req, res) => {
       .status(400)
       .json({ isError: true, message: "(!)Invalid product data." });
   }
+  const prodName = data.prodName || null;
+  const prodRemain = data.prodRemain || null;
+  const prodPrice = data.prodPrice || null;
+  if (!prodName || !prodRemain || !prodPrice) {
+    return res.status(400).json({
+      isError: true,
+      message: `(!)Invalid product data (= ${JSON.stringify(data)}).`,
+    });
+  }
   const result = await insertProductService(data);
+  console.log({ result });
   if (!result) {
     return res.status(500).json({ isError: true, message: "(!)Server Error." });
   }
@@ -85,12 +103,21 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/", (req, res) => {});
-router.delete("/:id", (req, res) => {
-  const token = req.headers.token || null;
-  if (!token) {
-    return res.json({ isError: false, message: "(!)Invalid token." });
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  //   const token = req.headers.token || null;
+  //   if (!token) {
+  //     return res.json({ isError: false, message: "(!)Invalid token." });
+  //   }
+  if (!id || isNaN(id)) {
+    return res
+      .status(400)
+      .json({ isError: true, message: `(!)Invalid product id (= ${id})` });
   }
-
+  const result = await deleteProductService(id);
+  if (!result) {
+    return res.status(500).json({ isError: true, message: "(!)Server Error." });
+  }
   return res.json({
     isError: false,
     message: `Success to delete product(id=${id}).`,

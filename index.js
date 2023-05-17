@@ -17,6 +17,7 @@ app.use(express.json());
 const policyRouter = require("./routers/policy.router");
 const userRouter = require("./routers/user.router");
 const dummyInsertRouter = require("./routers/dummyInsert.router");
+const dummyProductRouter = require("./routers/product.router");
 
 const sleep = async (time = 500) =>
   await new Promise((resolve) => setTimeout(() => resolve(), time));
@@ -119,6 +120,7 @@ const getCreatedAt = () => {
 app.use("/dummy/insert", dummyInsertRouter);
 app.use("/dummy/policy", policyRouter);
 app.use("/dummy/users", userRouter);
+app.use("/dummy/products", dummyProductRouter);
 
 app.get("/api", (req, res) => {
   const { pageNumber, pageSize = 10 } = req.query;
@@ -171,8 +173,8 @@ app.post("/elice-gmail", async (req, res) => {
   return res.json({ isError: false, result });
 });
 
-// app.listen(PORT, () => {
-//   console.log(`Express running on ${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`Express running on ${PORT}`);
+});
 
-module.exports = app;
+// module.exports = app;
