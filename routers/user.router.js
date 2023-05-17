@@ -1,4 +1,5 @@
 const express = require("express");
+const connection = require("../db_init");
 const router = express.Router();
 
 const dummyUsers = [
@@ -8,13 +9,58 @@ const dummyUsers = [
   { id: "A3", name: "아레스", createdAt: new Date("2022-01-04") },
 ];
 
-router.get("/", (req, res) => {
-  return res.json(dummyUsers);
+const getUser = async () => {
+  return await new Promise((resolve) => {
+    connection.query("select * from user", (err, results) => {
+      if (err) {
+        console.log({ err });
+        return resolve(false);
+      }
+      return resolve(results);
+    });
+  });
+};
+
+const getUserOne = async (id) => {
+  return await new Promise((resolve) => {
+    connection.query(`select * from user where id = ${id}`, (err, result) => {
+      if (err) {
+        console.log({ err });
+        return resolve(false);
+      }
+      return resolve(result);
+    });
+  });
+};
+
+const insertUser = async (data) => {
+  return await new Promise((resolve) => {
+    connection.query(
+      "insert into user (name, createdAt) values (?, ?)",
+      [data.name, createdAt],
+      (err, results) => {
+        if (err) {
+          console.log({ err });
+          return resolve(false);
+        }
+        return resolve(true);
+      }
+    );
+  });
+};
+
+router.get("/", async (req, res) => {
+  const users = await getUser();
+  return res.json(users);
+});
+router.post("/", async (req, res) => {
+  const result = await insertUser(req.body);
+  return res.json({ result, timestamp: new Date().getTime() });
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const id = req.params.id;
-  const targetUser = dummyUsers.find((user) => user.id === id);
-  return res.json({ data: targetUser });
+  const user = await getUserOne(id);
+  return res.json(user);
 });
 module.exports = router;
