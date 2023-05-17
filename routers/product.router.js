@@ -1,0 +1,100 @@
+const express = require("express");
+const router = express.Router();
+const connection = require("../db_init");
+
+const getProductService = async () => {
+  return await new Promise((resolve, reject) => {
+    connection.query(`select * from product`, (err, result) => {
+      if (err) {
+        console.log({ err });
+        return resolve(false);
+      }
+      return resolve(result);
+    });
+  });
+};
+const getProductByIdService = async (id) => {
+  return await new Promise((resolve, reject) => {
+    connection.query(
+      `select * from product where id = ${id}`,
+      (err, result) => {
+        if (err) {
+          console.log({ err });
+          return resolve(false);
+        } else {
+          return resolve(result);
+        }
+      }
+    );
+  });
+};
+
+const insertProductService = async (data) => {
+  return await new Promise((resolve, reject) => {
+    connection.query(
+      "insert into product (prodName, prodRemain, prodPrice, updatedAt, createdAt) values (?, ?, ?, ?, ?)",
+      [data.prodName, data.prodRemain, data.prodPrice, new Date(), new Date()],
+      (err) => {
+        if (err) {
+          return resolve(false);
+        }
+        return resolve(true);
+      }
+    );
+  });
+};
+
+const updateProductService = async () => {
+  return await new Promise((resolve, reject) => {});
+};
+const deleteProductService = async () => {
+  return await new Promise((resolve, reject) => {});
+};
+
+router.get("/", async (req, res) => {
+  const result = await getProductService();
+  if (!result)
+    return res.status(500).json({ isError: true, message: "(!)Server Error" });
+  return res.json({ isError: false, data: result });
+});
+
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  if (!id || !id.trim() || isNaN(id))
+    return res
+      .status(400)
+      .json({ isError: true, message: "(!)Invalid product id." });
+  const result = await getProductByIdService(id);
+  if (!result)
+    return res.status(500).json({ isError: true, message: "(!)Server Error." });
+  return res.json({ isError: false, data: result });
+});
+
+router.post("/", async (req, res) => {
+  const data = req.body || null;
+  if (!data) {
+    return res
+      .status(400)
+      .json({ isError: true, message: "(!)Invalid product data." });
+  }
+  const result = await insertProductService(data);
+  if (!result) {
+    return res.status(500).json({ isError: true, message: "(!)Server Error." });
+  }
+  return res.json({ isError: false, message: "Success to add product data." });
+});
+
+router.put("/", (req, res) => {});
+router.delete("/:id", (req, res) => {
+  const token = req.headers.token || null;
+  if (!token) {
+    return res.json({ isError: false, message: "(!)Invalid token." });
+  }
+
+  return res.json({
+    isError: false,
+    message: `Success to delete product(id=${id}).`,
+  });
+});
+
+module.exports = router;
