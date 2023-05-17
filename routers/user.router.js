@@ -37,7 +37,7 @@ const insertUser = async (data) => {
   return await new Promise((resolve) => {
     connection.query(
       "insert into user (name, createdAt) values (?, ?)",
-      [data.name, createdAt],
+      [data.name, new Date()],
       (err, results) => {
         if (err) {
           console.log({ err });
