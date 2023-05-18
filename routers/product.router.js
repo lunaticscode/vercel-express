@@ -44,8 +44,23 @@ const insertProductService = async (data) => {
   });
 };
 
-const updateProductService = async () => {
-  return await new Promise((resolve, reject) => {});
+const updateProductService = async (id, data) => {
+  return await new Promise((resolve) => {
+    connection.query(
+      `update user set prodName = ${data.prodName}, prodRemain = ${
+        data.prodRemain
+      }, prodPrice = ${
+        data.prodPrice
+      }, updatedAt = ${new Date()} where id = ${id}`,
+      (err, result) => {
+        if (err) {
+          console.log({ err });
+          return resolve(false);
+        }
+        return resolve(true);
+      }
+    );
+  });
 };
 const deleteProductService = async (id) => {
   return await new Promise((resolve) => {
@@ -102,7 +117,33 @@ router.post("/", async (req, res) => {
   return res.json({ isError: false, message: "Success to add product data." });
 });
 
-router.put("/", (req, res) => {});
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { prodName, prodRemain, prodPrice } = req.body;
+
+  if (!id || isNaN(id)) {
+    return res.status(400).json({
+      isError: true,
+      message: `(!)Invalid request id (= ${id}).`,
+    });
+  }
+  if (!req.body || [prodName, prodRemain, prodPrice].some((data) => !data)) {
+    return res.status(400).json({
+      isError: true,
+      message: `(!)Invalid request data (= ${JSON.stringify(req.body)}).`,
+    });
+  }
+
+  const result = await updateProductService(id, req.body);
+  if (!result) {
+    return res.status(500).json({ isError: true, message: "(!)Server Error." });
+  }
+  return res.json({
+    isError: false,
+    message: `Success to update data (id = ${id}).`,
+  });
+});
+
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   //   const token = req.headers.token || null;
