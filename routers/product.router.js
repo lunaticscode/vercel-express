@@ -47,7 +47,7 @@ const insertProductService = async (data) => {
 const updateProductService = async (id, data) => {
   return await new Promise((resolve) => {
     connection.query(
-      `update user set prodName = ${data.prodName}, prodRemain = ${
+      `update product set prodName = ${data.prodName}, prodRemain = ${
         data.prodRemain
       }, prodPrice = ${
         data.prodPrice
