@@ -47,11 +47,8 @@ const insertProductService = async (data) => {
 const updateProductService = async (id, data) => {
   return await new Promise((resolve) => {
     connection.query(
-      `update product set prodName = ${data.prodName}, prodRemain = ${
-        data.prodRemain
-      }, prodPrice = ${
-        data.prodPrice
-      }, updatedAt = ${new Date()} where id = ${id}`,
+      `update product set prodName = ?, prodRemain = ?, prodPrice = ? where id = ?`,
+      [data.prodName, data.prodRemain, data.prodPrice, id],
       (err, result) => {
         if (err) {
           console.log({ err });

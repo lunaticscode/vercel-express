@@ -62,7 +62,8 @@ const insertPolicyData = async (data) => {
 const updatePolicyData = async (id, data) => {
   return await new Promise((resolve) => {
     connection.query(
-      `update policy set policyName = ${data.policyName}, deviceCnt = ${data.deviceCnt}, os = ${data.os} where id = ${id}`,
+      `update policy set policyName = ?, deviceCnt = ?, os = ? where id = ?`,
+      [data.policyName, data.deviceCnt, data.os, id],
       (err, result) => {
         if (err) {
           console.log({ err });
