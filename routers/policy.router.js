@@ -59,6 +59,22 @@ const insertPolicyData = async (data) => {
   });
 };
 
+const updatePolicyData = async (id, data) => {
+  return await new Promise((resolve) => {
+    connection.query(
+      `update policy set policyName = ${data.policyName}, deviceCnt = ${data.deviceCnt}, os = ${data.os} where id = ${id}`,
+      (err, result) => {
+        if (err) {
+          console.log({ err });
+          return resolve(false);
+        }
+        console.log(result);
+        return resolve(true);
+      }
+    );
+  });
+};
+
 const deletePolicyData = async (id) => {
   return await new Promise((resolve, _) => {
     connection.query(`delete from policy where id=${id}`, (err, results) => {
@@ -79,6 +95,13 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const data = req.body;
   const result = await insertPolicyData(data);
+  return res.json({ result, timestamp: new Date().getTime() });
+});
+
+router.put("/:id", async (req, res) => {
+  const data = req.body;
+  const { id } = req.params;
+  const result = await updatePolicyData(id, data);
   return res.json({ result, timestamp: new Date().getTime() });
 });
 
