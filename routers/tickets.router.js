@@ -61,10 +61,10 @@ router.get("/", (req, res) => {
   }
   if (sortPrice) {
     if (sortPrice === "price-cheap") {
-      resultData.sort((a, b) => b.price - a.price);
+      resultData.sort((a, b) => a.price - b.price);
     }
     if (sortPrice === "price-expensive") {
-      resultData.sort((a, b) => a.price - b.price);
+      resultData.sort((a, b) => b.price - a.price);
     }
   }
   return res.status(200).json({ isError: false, data: resultData });
