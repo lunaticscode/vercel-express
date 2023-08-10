@@ -14,31 +14,31 @@ const PORT = 8888;
 app.use(cors());
 app.use(express.json());
 
-const policyRouter = require("./routers/policy.router");
-const userRouter = require("./routers/user.router");
-const dummyInsertRouter = require("./routers/dummyInsert.router");
-const dummyProductRouter = require("./routers/product.router");
+// const policyRouter = require("./routers/policy.router");
+// const userRouter = require("./routers/user.router");
+// const dummyInsertRouter = require("./routers/dummyInsert.router");
+// const dummyProductRouter = require("./routers/product.router");
 const ticketsRouter = require("./routers/tickets.router");
 
 const sleep = async (time = 500) =>
   await new Promise((resolve) => setTimeout(() => resolve(), time));
 
-app.get("/user", (req, res) => {
-  return res.status(200).json({ result: _makeUserData() });
-});
+// app.get("/user", (req, res) => {
+//   return res.status(200).json({ result: _makeUserData() });
+// });
 
-app.post("/user", (req, res) => {
-  const cnt = req.body.count || 0;
-  let resultData;
-  if (!cnt) {
-    resultData = [];
-    return res.status(200).json({ result: resultData });
-  }
-  resultData = new Array(cnt).fill(0).map((elem) => {
-    return _makeUserData();
-  });
-  return res.status(200).json({ result: resultData });
-});
+// app.post("/user", (req, res) => {
+//   const cnt = req.body.count || 0;
+//   let resultData;
+//   if (!cnt) {
+//     resultData = [];
+//     return res.status(200).json({ result: resultData });
+//   }
+//   resultData = new Array(cnt).fill(0).map((elem) => {
+//     return _makeUserData();
+//   });
+//   return res.status(200).json({ result: resultData });
+// });
 
 const paginating = (pageNumber, pageSize, type) => {
   const mapTypeToDataList = {
@@ -62,14 +62,14 @@ const paginating = (pageNumber, pageSize, type) => {
   };
 };
 
-app.get("/dummy/sleep-5", async (req, res) => {
-  await sleep(5000);
-  return res.json({ result: true, msg: "delay 10 seconds reponse." });
-});
+// app.get("/dummy/sleep-5", async (req, res) => {
+//   await sleep(5000);
+//   return res.json({ result: true, msg: "delay 10 seconds reponse." });
+// });
 
-app.get("/dummy/error", (req, res) => {
-  throw new Error("Trigger Server-error");
-});
+// app.get("/dummy/error", (req, res) => {
+//   throw new Error("Trigger Server-error");
+// });
 
 //* _id, productName, price, quantity,image, createdAt
 
@@ -118,65 +118,65 @@ const getCreatedAt = () => {
       Math.floor(Math.random() * 1000 * 3600 * 24 * 30 + 1000 * 3600)
   );
 };
-app.use("/dummy/insert", dummyInsertRouter);
-app.use("/dummy/policy", policyRouter);
-app.use("/dummy/users", userRouter);
-app.use("/dummy/products", dummyProductRouter);
+// app.use("/dummy/insert", dummyInsertRouter);
+// app.use("/dummy/policy", policyRouter);
+// app.use("/dummy/users", userRouter);
+// app.use("/dummy/products", dummyProductRouter);
 
 app.use("/tickets", ticketsRouter);
 
-app.get("/api", (req, res) => {
-  const { pageNumber, pageSize = 10 } = req.query;
-  return res.json(paginating(pageNumber, pageSize, "api"));
-});
+// app.get("/api", (req, res) => {
+//   const { pageNumber, pageSize = 10 } = req.query;
+//   return res.json(paginating(pageNumber, pageSize, "api"));
+// });
 
-app.get("/license", (req, res) => {
-  const { pageNumber, pageSize = 10 } = req.query;
-  return res.json(paginating(pageNumber, pageSize, "license"));
-});
+// app.get("/license", (req, res) => {
+//   const { pageNumber, pageSize = 10 } = req.query;
+//   return res.json(paginating(pageNumber, pageSize, "license"));
+// });
 
-app.get("/prod/:id", (req, res) => {
-  const { id } = req.params;
-  const prodData = _prodDataList.find((prod) => prod.prodId === id);
-  return res.json(prodData);
-});
+// app.get("/prod/:id", (req, res) => {
+//   const { id } = req.params;
+//   const prodData = _prodDataList.find((prod) => prod.prodId === id);
+//   return res.json(prodData);
+// });
 
-app.get("/prod", (req, res) => {
-  const { pageNumber, pageSize = 10 } = req.query;
-  return res.json(paginating(pageNumber, pageSize, "prod"));
-});
+// app.get("/prod", (req, res) => {
+//   const { pageNumber, pageSize = 10 } = req.query;
+//   return res.json(paginating(pageNumber, pageSize, "prod"));
+// });
 
-app.post("/elice-gmail", async (req, res) => {
-  const { gmailUrl, ...emailContent } = req.body;
-  const { email, name, message = "없음", phone = "없음" } = emailContent;
-  const formData = new FormData();
-  formData.append("email", email);
-  formData.append("name", name);
-  formData.append("message", message);
-  formData.append("phone", phone);
+// app.post("/elice-gmail", async (req, res) => {
+//   const { gmailUrl, ...emailContent } = req.body;
+//   const { email, name, message = "없음", phone = "없음" } = emailContent;
+//   const formData = new FormData();
+//   formData.append("email", email);
+//   formData.append("name", name);
+//   formData.append("message", message);
+//   formData.append("phone", phone);
 
-  // console.log(emailContent);
-  // console.log({ gmailUrl });
-  const result = await fetch(gmailUrl, {
-    method: "post",
-    body: formData,
-    // headers: { "Content-Type": "multipart/form-data" },
-  })
-    .then((res) => res.json())
-    .catch((err) => {
-      console.log({ err });
-      return false;
-    });
-  if (!result) {
-    return res.json({
-      isError: true,
-      message: "(!) Request 값을 다시 확인해주세요.",
-    });
-  }
-  return res.json({ isError: false, result });
-});
+//   // console.log(emailContent);
+//   // console.log({ gmailUrl });
+//   const result = await fetch(gmailUrl, {
+//     method: "post",
+//     body: formData,
+//     // headers: { "Content-Type": "multipart/form-data" },
+//   })
+//     .then((res) => res.json())
+//     .catch((err) => {
+//       console.log({ err });
+//       return false;
+//     });
+//   if (!result) {
+//     return res.json({
+//       isError: true,
+//       message: "(!) Request 값을 다시 확인해주세요.",
+//     });
+//   }
+//   return res.json({ isError: false, result });
+// });
 
-// app.listen(PORT, () => {
+// // app.listen(PORT, () => {
 //   console.log(`Express running on ${PORT}`);
 // });
 
