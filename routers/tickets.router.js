@@ -46,7 +46,7 @@ router.get("/", (req, res) => {
       (data) => data.airline === airlineMap[airline]
     );
   }
-  console.log(resultData);
+
   if (sortDate) {
     if (sortDate === "date-fast") {
       resultData.sort((a, b) => new Date(b.date) - new Date(a.date));
