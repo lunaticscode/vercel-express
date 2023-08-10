@@ -176,8 +176,8 @@ app.use("/tickets", ticketsRouter);
 //   return res.json({ isError: false, result });
 // });
 
-app.listen(PORT, () => {
-  console.log(`Express running on ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Express running on ${PORT}`);
+// });
 
 module.exports = app;
