@@ -12,7 +12,7 @@ const destination = {
 };
 
 // 항공사 데이터
-const airline = {
+const airlineMap = {
   KOREANAIR: "대한항공",
   ASIANA: "아시아나항공",
   TEEWAY: "티웨이항공",
@@ -25,7 +25,8 @@ const airline = {
 const ticketsData = require("../data/tickets.json");
 const router = require("express").Router();
 router.get("/", (req, res) => {
-  const { departures, arrivals, date } = req.query;
+  const { departures, arrivals, date, airline, sortDate, sortPrice } =
+    req.query;
   if (!departures || !arrivals || !date) {
     return res.status(400).json({
       isError: true,
@@ -33,12 +34,39 @@ router.get("/", (req, res) => {
       message: "(!) Invalid [departures, arrivals, date] query data.",
     });
   }
-  const resultData = ticketsData.filter(
+  let resultData = ticketsData.filter(
     (data) =>
       data.departures === destination[departures] &&
       data.arrivals === destination[arrivals] &&
       new Date(data.date).getTime() >= new Date(date).getTime()
   );
+
+  if (airline) {
+    resultData = resultData.filter(
+      (data) => data.airline === airlineMap[airline]
+    );
+  }
+
+  if (sortDate) {
+    if (sortDate === "date-fast") {
+      resultData.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+    }
+    if (sortDate === "date-slow") {
+      resultData.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+    }
+  }
+  if (sortPrice) {
+    if (sortPrice === "price-cheap") {
+      resultData.sort((a, b) => b.price - a.price);
+    }
+    if (sortPrice === "price-expensive") {
+      resultData.sort((a, b) => a.price - b.price);
+    }
+  }
   return res.status(200).json({ isError: false, data: resultData });
 });
 
