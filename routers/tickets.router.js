@@ -50,12 +50,12 @@ router.get("/", (req, res) => {
   if (sortDate) {
     if (sortDate === "date-fast") {
       resultData.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        (a, b) => new Date(b.date).getTime() > new Date(a.date).getTime()
       );
     }
     if (sortDate === "date-slow") {
       resultData.sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        (a, b) => new Date(a.date).getTime() < new Date(b.date).getTime()
       );
     }
   }
