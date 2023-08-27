@@ -1,0 +1,69 @@
+const { insertUser, findUser } = require("../services/users.service");
+const { getToken, validateToken } = require("../utils/token");
+
+const router = require("express").Router();
+
+const validateTokenMiddleware = (req, res, next) => {
+  console.log(req.headers);
+  const authorizationHeader =
+    req.headers.authorization || req.headers.Authorization || null;
+  if (!authorizationHeader) {
+    return res.status(400).json({
+      isError: true,
+      message: "(!) Header의 Token을 다시 확인해주세요.",
+    });
+  }
+  const token = authorizationHeader.split("Bearer ")[1];
+  if (!validateToken(token)) {
+    return res.status(401).json({
+      isError: true,
+      message: "(!) 유효하지 않은 토큰입니다. 다시 로그인 해주세요.",
+    });
+  }
+  return res
+    .status(200)
+    .json({ isError: false, message: "인증된 유저 입니다." });
+};
+
+const validateUserDataMiddleware = (req, res, next) => {
+  const { email, password } = req.body;
+  const isValid =
+    email && email.trim().length && password && password.trim().length;
+  if (!isValid)
+    return res.status(400).json({
+      isError: true,
+      message: `(!) body 데이터를 다시 확인해주세요. \n ::: ${JSON.stringify(
+        req.body
+      )}`,
+    });
+  next();
+};
+
+router.get("/", validateTokenMiddleware);
+
+router.post("/signup", validateUserDataMiddleware, async (req, res) => {
+  const insertResult = await insertUser(req.body);
+  if (!insertResult) {
+    return res.status(500).json({
+      isError: true,
+      message: "(!) 서버 오류, 관리자에게 문의해주세요.",
+    });
+  }
+  return res.status(201).json({ isError: false, message: "회원가입 성공" });
+});
+
+router.post("/signin", validateUserDataMiddleware, async (req, res) => {
+  const findUserResult = await findUser(req.body);
+  if (!findUserResult) {
+    return res
+      .status(400)
+      .json({ isError: true, message: "(!) 해당 유저가 없습니다." });
+  }
+  return res.status(200).json({
+    isError: false,
+    message: "로그인 성공",
+    token: getToken(req.body),
+  });
+});
+
+module.exports = router;

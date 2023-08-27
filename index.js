@@ -2,6 +2,7 @@ const express = require("express");
 const fetch = require("node-fetch");
 const FormData = require("form-data");
 const cors = require("cors");
+
 const {
   _makeUserData,
   _apiDataList,
@@ -9,7 +10,13 @@ const {
   _prodDataList,
 } = require("./makeData");
 const app = express();
+
 const PORT = 8888;
+
+require("./db_init");
+
+const ticketsRouter = require("./routers/tickets.router");
+const usersRouter = require("./routers/users.router");
 
 app.use(cors());
 app.use(express.json());
@@ -18,7 +25,6 @@ app.use(express.json());
 // const userRouter = require("./routers/user.router");
 // const dummyInsertRouter = require("./routers/dummyInsert.router");
 // const dummyProductRouter = require("./routers/product.router");
-const ticketsRouter = require("./routers/tickets.router");
 
 const sleep = async (time = 500) =>
   await new Promise((resolve) => setTimeout(() => resolve(), time));
@@ -124,6 +130,8 @@ const getCreatedAt = () => {
 // app.use("/dummy/products", dummyProductRouter);
 
 app.use("/tickets", ticketsRouter);
+
+app.use("/users", usersRouter);
 
 // app.get("/api", (req, res) => {
 //   const { pageNumber, pageSize = 10 } = req.query;
