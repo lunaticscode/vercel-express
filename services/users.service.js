@@ -32,7 +32,7 @@ const getUser = async (data) => {
           return resolve(false);
         }
         const { password, ...rest } = userData;
-        return resolve({ rest });
+        return resolve(rest);
       }
     );
   });

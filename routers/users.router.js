@@ -42,9 +42,9 @@ const validateUserDataMiddleware = (req, res, next) => {
 };
 
 router.get("/", validateTokenMiddleware, async (req, res) => {
-  const token =
+  const tokenHeader =
     req.headers["authorization"] || req.headers["Authorization"] || null;
-  const userData = validateToken(token);
+  const userData = validateToken(tokenHeader.split("Bearer ")[1]);
   const getUserResult = await getUser(userData);
   if (!getUserResult) {
     return res.json({
