@@ -16,7 +16,29 @@ const insertUser = async (data) => {
   });
 };
 
-const findUser = async (data) => {
+const getUser = async (data) => {
+  const { email } = data;
+  return await new Promise((resolve) => {
+    dbConnection.query(
+      "select * from users where email=?",
+      [email],
+      (err, result) => {
+        if (err) {
+          console.log({ err });
+          return resolve(false);
+        }
+        const userData = result[0];
+        if (!userData) {
+          return resolve(false);
+        }
+        const { password, ...rest } = userData;
+        return resolve({ rest });
+      }
+    );
+  });
+};
+
+const isExistUser = async (data) => {
   const { email, password } = data;
   return await new Promise((resolve, reject) => {
     dbConnection.query(
@@ -40,5 +62,6 @@ const findUser = async (data) => {
 
 module.exports = {
   insertUser,
-  findUser,
+  isExistUser,
+  getUser,
 };

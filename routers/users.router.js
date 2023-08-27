@@ -1,4 +1,8 @@
-const { insertUser, findUser } = require("../services/users.service");
+const {
+  insertUser,
+  isExistUser,
+  getUser,
+} = require("../services/users.service");
 const { getToken, validateToken } = require("../utils/token");
 
 const router = require("express").Router();
@@ -20,9 +24,7 @@ const validateTokenMiddleware = (req, res, next) => {
       message: "(!) 유효하지 않은 토큰입니다. 다시 로그인 해주세요.",
     });
   }
-  return res
-    .status(200)
-    .json({ isError: false, message: "인증된 유저 입니다." });
+  next();
 };
 
 const validateUserDataMiddleware = (req, res, next) => {
@@ -39,7 +41,23 @@ const validateUserDataMiddleware = (req, res, next) => {
   next();
 };
 
-router.get("/", validateTokenMiddleware);
+router.get("/", validateTokenMiddleware, async (req, res) => {
+  const token =
+    req.headers["authorization"] || req.headers["Authorization"] || null;
+  const userData = validateToken(token);
+  const getUserResult = await getUser(userData);
+  if (!getUserResult) {
+    return res.json({
+      isError: true,
+      message: "(!) 유저 인증 실패, Token을 다시 확인해주세요.",
+    });
+  }
+  return res.json({
+    isError: false,
+    message: "유저 인증 성공",
+    data: getUserResult,
+  });
+});
 
 router.post("/signup", validateUserDataMiddleware, async (req, res) => {
   const insertResult = await insertUser(req.body);
@@ -53,8 +71,8 @@ router.post("/signup", validateUserDataMiddleware, async (req, res) => {
 });
 
 router.post("/signin", validateUserDataMiddleware, async (req, res) => {
-  const findUserResult = await findUser(req.body);
-  if (!findUserResult) {
+  const isExistUserResult = await isExistUser(req.body);
+  if (!isExistUserResult) {
     return res
       .status(400)
       .json({ isError: true, message: "(!) 해당 유저가 없습니다." });
