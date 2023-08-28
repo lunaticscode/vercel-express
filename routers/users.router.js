@@ -59,12 +59,22 @@ router.get("/", validateTokenMiddleware, async (req, res) => {
   });
 });
 
+const signupErrorCodeMessage = {
+  1: "(!) 이미 가입된 이메일 입니다.",
+  2: "(!) 서버 오류, 관리자에게 문의해주세요.",
+};
+
+const signupErrorCodeStatus = {
+  1: 400,
+  2: 500,
+};
+
 router.post("/signup", validateUserDataMiddleware, async (req, res) => {
-  const insertResult = await insertUser(req.body);
-  if (!insertResult) {
-    return res.status(500).json({
+  const { isError, code = null } = await insertUser(req.body);
+  if (isError) {
+    return res.status(signupErrorCodeStatus[code]).json({
       isError: true,
-      message: "(!) 서버 오류, 관리자에게 문의해주세요.",
+      message: signupErrorCodeMessage[code],
     });
   }
   return res.status(201).json({ isError: false, message: "회원가입 성공" });

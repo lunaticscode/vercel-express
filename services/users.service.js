@@ -1,16 +1,20 @@
 const dbConnection = require("../db_init");
 const insertUser = async (data) => {
   const { email, password } = data;
-  return await new Promise((resolve) => {
+  return await new Promise(async (resolve) => {
+    const isExist = await isExistUser(data);
+    if (isExist) {
+      return resolve({ isError: true, code: 1 });
+    }
     dbConnection.query(
       "insert into users (email, password) values (?, ?)",
       [email, password],
       (err) => {
         if (err) {
           console.log({ err });
-          return resolve(false);
+          return resolve({ isError: true, code: 2 });
         }
-        return resolve(true);
+        return resolve({ isError: false });
       }
     );
   });
