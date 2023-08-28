@@ -43,11 +43,11 @@ const getUser = async (data) => {
 };
 
 const isExistUser = async (data) => {
-  const { email, password } = data;
+  const { email } = data;
   return await new Promise((resolve, reject) => {
     dbConnection.query(
-      "select count(*) as count from users where email=? and password =?",
-      [email, password],
+      "select count(*) as count from users where email=?",
+      [email],
       (err, result) => {
         if (err) {
           console.log({ err });
