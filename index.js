@@ -17,7 +17,8 @@ require("./db_init");
 
 const ticketsRouter = require("./routers/tickets.router");
 const usersRouter = require("./routers/users.router");
-
+const postRouter = require("./routers/post.router");
+const { insertQna } = require("./services/qna.service");
 app.use(cors());
 app.use(express.json());
 
@@ -130,6 +131,7 @@ const getCreatedAt = () => {
 // app.use("/dummy/products", dummyProductRouter);
 
 app.use("/tickets", ticketsRouter);
+app.use("/qna", postRouter);
 
 app.use("/users", usersRouter);
 
@@ -184,8 +186,22 @@ app.use("/users", usersRouter);
 //   return res.json({ isError: false, result });
 // });
 
-// app.listen(PORT, () => {
-//   console.log(`Express running on ${PORT}`);
-// });
+// const dummyInsertData = async () => {
+//   const arr = Array.from({ length: 55 }, (_, index) => index + 75);
 
-module.exports = app;
+//   for (let i of arr) {
+//     await sleep(Math.random(10000) + 1000);
+//     await insertQna({
+//       title: `qna문의-title-${i}`,
+//       content: `결제가 안됩니다. 결제가 안됩니다. content-${i}`,
+//     });
+//   }
+//   // const await insertQna()
+// };
+
+app.listen(PORT, () => {
+  // dummyInsertData();
+  console.log(`Express running on ${PORT}`);
+});
+
+// module.exports = app;
