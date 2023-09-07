@@ -199,9 +199,9 @@ app.use("/users", usersRouter);
 //   // const await insertQna()
 // };
 
-app.listen(PORT, () => {
-  // dummyInsertData();
-  console.log(`Express running on ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   // dummyInsertData();
+//   console.log(`Express running on ${PORT}`);
+// });
 
-// module.exports = app;
+module.exports = app;
