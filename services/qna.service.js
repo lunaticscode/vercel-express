@@ -69,7 +69,7 @@ const getQnaPagedList = async (data) => {
     const count = await getCountQnaTable();
     console.log({ count });
     dbConnection.query(
-      `select * from qna limit 10 offset ${(page - 1) * 10}`,
+      `select * from qna order by createdAt limit 10 offset ${(page - 1) * 10}`,
       (err, result) => {
         if (err) {
           console.log({ err });
