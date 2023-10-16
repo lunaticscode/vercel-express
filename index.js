@@ -18,6 +18,7 @@ require("./db_init");
 const ticketsRouter = require("./routers/tickets.router");
 const usersRouter = require("./routers/users.router");
 const postRouter = require("./routers/post.router");
+const foundationRouter = require("./routers/foundation.router");
 const { insertQna } = require("./services/qna.service");
 app.use(cors());
 app.use(express.json());
@@ -134,6 +135,7 @@ app.use("/tickets", ticketsRouter);
 app.use("/qna", postRouter);
 
 app.use("/users", usersRouter);
+app.use("/api/foundation", foundationRouter);
 
 // app.get("/api", (req, res) => {
 //   const { pageNumber, pageSize = 10 } = req.query;
